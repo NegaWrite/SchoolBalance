@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Баланс чтобы есть в столовой</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #27ae60;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 10px;
+        }
+        
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        input, button {
+            padding: 12px;
+            margin: 10px 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        
+        input {
+            width: 250px;
+        }
+        
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #219653;
+        }
+        
+        .result-section {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .balance-info {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .nav-link:hover {
+            background-color: #2980b9;
+        }
+        
+        .instructions {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Проверка баланса</h1>
+    
+    <div class="instructions">
+        <p>Чтобы узнать баланс напишите ваше число</p>
+    </div>
+    
+    <div class="container">
+        <!-- Раздел для проверки баланса -->
+        <div style="text-align: center;">
+            <h2>Проверить баланс</h2>
+            <input type="text" id="studentIdCheck" placeholder="Число">
+            <br>
+            <button id="checkBalance">Проверить баланс</button>
+            <div id="checkResult" class="result-section"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Импорт Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+        // Конфигурация Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5KkkUREC2ypWXWEuWrb_TBqAwGndPLz4",
+            authDomain: "schoolbalance-bd77c.firebaseapp.com",
+            databaseURL: "https://schoolbalance-bd77c-default-rtdb.firebaseio.com",
+            projectId: "schoolbalance-bd77c",
+            storageBucket: "schoolbalance-bd77c.firebasestorage.app",
+            messagingSenderId: "242592402810",
+            appId: "1:242592402810:web:4458d7aad486036fa41ac3",
+            measurementId: "G-MHGHWSYXP2"
+        };
+
+        // Инициализация Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Обработчик события для ученической версии
+        document.getElementById('checkBalance').addEventListener('click', checkBalance);
+
+        // Функция проверки баланса
+        async function checkBalance() {
+            const studentId = document.getElementById('studentIdCheck').value.trim();
+            const resultDiv = document.getElementById('checkResult');
+            
+            if (!studentId) {
+                resultDiv.innerHTML = '<div class="error">Пожалуйста, введите число</div>';
+                return;
+            }
+
+            try {
+                const studentRef = ref(database, 'students/' + studentId);
+                const snapshot = await get(studentRef);
+                
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    resultDiv.innerHTML = `
+                        <div class="info">
+                            <h3>Информация о балансе</h3>
+                            <div class="balance-info"><strong>Число:</strong> ${studentId}</div>
+                            <div class="balance-info"><strong>ФИО ученика:</strong> ${data.name}</div>
+                            <div class="balance-info"><strong>Класс:</strong> ${data.class}</div>
+                            <div class="balance-info" style="font-size: 24px; font-weight: bold; color: #27ae60;">
+                                <strong>Текущий баланс:</strong> ${data.balance} руб.
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = '<div class="error">Ученик с таким числом не найден. Пожалуйста, проверьте правильность введённого числа.</div>';
+                }
+            } catch (error) {
+                console.error('Ошибка при проверке баланса:', error);
+                resultDiv.innerHTML = '<div class="error">Произошла ошибка при проверке баланса.</div>';
+            }
+        }
+    </script>
+</body>
+</html>
