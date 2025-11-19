@@ -869,52 +869,53 @@
         }
 
         // Функция списания средств
-        async function deductBalance() {
-            if (!isTeacherLoggedIn) {
-                alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
-                return;
-            }
+        // Функция списания средств
+async function deductBalance() {
+    if (!isTeacherLoggedIn) {
+        alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
+        return;
+    }
 
-            const studentId = document.getElementById('studentIdDeduct').value.trim();
-            const amount = parseFloat(document.getElementById('deductAmount').value);
-            const resultDiv = document.getElementById('deductResult');
+    const studentId = document.getElementById('studentIdDeduct').value.trim();
+    const amount = parseFloat(document.getElementById('deductAmount').value);
+    const resultDiv = document.getElementById('deductResult');
+    
+    if (!studentId || isNaN(amount) || amount <= 0) {
+        resultDiv.innerHTML = '<div class="error">Пожалуйста, введите корректные данные</div>';
+        return;
+    }
+
+    try {
+        const studentRef = ref(database, 'students/' + studentId);
+        const snapshot = await get(studentRef);
+        
+        if (snapshot.exists()) {
+            const currentBalance = snapshot.val().balance || 0;
+            const newBalance = currentBalance - amount;
             
-            if (!studentId || isNaN(amount) || amount <= 0) {
-                resultDiv.innerHTML = '<div class="error">Пожалуйста, введите корректные данные</div>';
-                return;
+            // Добавляем предупреждение при отрицательном балансе
+            let message = `<div class="success">Списано ${amount} руб. Новый баланс: ${newBalance} руб.</div>`;
+            if (newBalance < 0) {
+                message = `<div class="warning">Списано ${amount} руб. Внимание: отрицательный баланс: ${newBalance} руб.</div>`;
             }
-
-            try {
-                const studentRef = ref(database, 'students/' + studentId);
-                const snapshot = await get(studentRef);
-                
-                if (snapshot.exists()) {
-                    const currentBalance = snapshot.val().balance || 0;
-                    
-                    if (currentBalance < amount) {
-                        resultDiv.innerHTML = `<div class="error">Недостаточно средств. Текущий баланс: ${currentBalance} руб.</div>`;
-                        return;
-                    }
-                    
-                    const newBalance = currentBalance - amount;
-                    
-                    await update(studentRef, {
-                        balance: newBalance
-                    });
-                    
-                    resultDiv.innerHTML = `<div class="success">Списано ${amount} руб. Новый баланс: ${newBalance} руб.</div>`;
-                    
-                    // Очищаем поля
-                    document.getElementById('studentIdDeduct').value = '';
-                    document.getElementById('deductAmount').value = '';
-                } else {
-                    resultDiv.innerHTML = '<div class="error">Ученик с таким номером не найден</div>';
-                }
-            } catch (error) {
-                console.error('Ошибка при списании средств:', error);
-                resultDiv.innerHTML = '<div class="error">Произошла ошибка при списании средств</div>';
-            }
+            
+            await update(studentRef, {
+                balance: newBalance
+            });
+            
+            resultDiv.innerHTML = message;
+            
+            // Очищаем поля
+            document.getElementById('studentIdDeduct').value = '';
+            document.getElementById('deductAmount').value = '';
+        } else {
+            resultDiv.innerHTML = '<div class="error">Ученик с таким номером не найден</div>';
         }
+    } catch (error) {
+        console.error('Ошибка при списании средств:', error);
+        resultDiv.innerHTML = '<div class="error">Произошла ошибка при списании средств</div>';
+    }
+}
 
         // Функция удаления ученика
         async function deleteStudent() {
