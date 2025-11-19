@@ -244,6 +244,90 @@
             <button id="deductBalance">Списать средства</button>
             <div id="deductResult" class="result-section"></div>
         </div>
+
+        <!-- Раздел для массового списания -->
+        <div class="section">
+            <h2>Списать у всех</h2>
+            <p>Списать одинаковую сумму у всех учеников</p>
+            <input type="number" id="massDeductAmount" placeholder="Сумма списания">
+            <button id="massDeductBalance" class="delete">Списать у всех</button>
+            <div id="massDeductResult" class="result-section"></div>
+            
+            <script>
+            // Добавить в обработчики событий
+            document.getElementById('massDeductBalance').addEventListener('click', massDeductBalance);
+            
+            // Функция массового списания
+            async function massDeductBalance() {
+                if (!isTeacherLoggedIn) {
+                    alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
+                    return;
+                }
+            
+                const amount = parseFloat(document.getElementById('massDeductAmount').value);
+                const resultDiv = document.getElementById('massDeductResult');
+                
+                if (isNaN(amount) || amount <= 0) {
+                    resultDiv.innerHTML = '<div class="error">Пожалуйста, введите корректную сумму</div>';
+                    return;
+                }
+            
+                if (!confirm(`Вы уверены, что хотите списать ${amount} руб. у ВСЕХ учеников?`)) {
+                    resultDiv.innerHTML = '<div class="info">Операция отменена</div>';
+                    return;
+                }
+            
+                try {
+                    const studentsRef = ref(database, 'students');
+                    const snapshot = await get(studentsRef);
+                    
+                    if (snapshot.exists()) {
+                        const students = snapshot.val();
+                        let updatedCount = 0;
+                        let negativeBalanceCount = 0;
+                        
+                        // Обновляем баланс каждого ученика
+                        for (const studentId in students) {
+                            const student = students[studentId];
+                            const currentBalance = student.balance || 0;
+                            const newBalance = currentBalance - amount;
+                            
+                            await update(ref(database, 'students/' + studentId), {
+                                balance: newBalance
+                            });
+                            
+                            updatedCount++;
+                            if (newBalance < 0) {
+                                negativeBalanceCount++;
+                            }
+                        }
+                        
+                        let message = `<div class="success">Успешно списано ${amount} руб. у ${updatedCount} учеников</div>`;
+                        if (negativeBalanceCount > 0) {
+                            message += `<div class="warning">Внимание: у ${negativeBalanceCount} учеников отрицательный баланс</div>`;
+                        }
+                        
+                        resultDiv.innerHTML = message;
+                        
+                        // Очищаем поле
+                        document.getElementById('massDeductAmount').value = '';
+                        
+                        // Обновляем таблицу учеников если она открыта
+                        if (document.getElementById('allStudents').innerHTML.includes('table')) {
+                            showAllStudents();
+                        }
+                        
+                    } else {
+                        resultDiv.innerHTML = '<div class="info">В системе нет учеников</div>';
+                    }
+                } catch (error) {
+                    console.error('Ошибка при массовом списании:', error);
+                    resultDiv.innerHTML = '<div class="error">Произошла ошибка при массовом списании</div>';
+                }
+            }
+            </script>
+            
+        </div>
         
         <!-- Раздел для удаления ученика -->
         <div class="section">
