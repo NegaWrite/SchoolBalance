@@ -6,7 +6,7 @@
     <title>Баланс чтобы есть в столовой</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
@@ -25,15 +25,15 @@
         }
         
         .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px gray;
             margin-top: 20px;
         }
         
         input, button {
-            padding: 12px;
+            padding: 10px;
             margin: 10px 5px;
             border-radius: 4px;
             border: 1px solid #ddd;
@@ -49,17 +49,12 @@
             color: white;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: #219653;
         }
         
         .result-section {
             margin-top: 20px;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 5px;
             text-align: center;
         }
         
@@ -96,16 +91,17 @@
             border-radius: 4px;
         }
         
-        .nav-link:hover {
-            background-color: #2980b9;
-        }
-        
         .instructions {
             background-color: #e8f4f8;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 5px;
             margin-bottom: 20px;
             text-align: center;
+        }
+        
+        h4 {
+            text-align: center;
+            color: #666;
         }
     </style>
 </head>
@@ -117,7 +113,6 @@
     </div>
     
     <div class="container">
-        <!-- Раздел для проверки баланса -->
         <div style="text-align: center;">
             <h2>Проверить баланс</h2>
             <input type="text" id="studentIdCheck" placeholder="Число">
@@ -131,11 +126,9 @@
     <h4>© 2025 School Balance</h4>
 
     <script type="module">
-        // Импорт Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-        // Конфигурация Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyA5KkkUREC2ypWXWEuWrb_TBqAwGndPLz4",
             authDomain: "schoolbalance-bd77c.firebaseapp.com",
@@ -147,14 +140,11 @@
             measurementId: "G-MHGHWSYXP2"
         };
 
-        // Инициализация Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Обработчик события для ученической версии
         document.getElementById('checkBalance').addEventListener('click', checkBalance);
 
-        // Функция проверки баланса
         async function checkBalance() {
             const studentId = document.getElementById('studentIdCheck').value.trim();
             const resultDiv = document.getElementById('checkResult');
