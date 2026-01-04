@@ -6,7 +6,7 @@
     <title>Управление балансами</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
@@ -25,22 +25,22 @@
         }
         
         .section {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px gray;
+            margin-bottom: 15px;
         }
         
         input, button, select {
-            padding: 10px;
+            padding: 8px;
             margin: 5px;
             border-radius: 4px;
             border: 1px solid #ddd;
         }
         
         input, select {
-            width: 200px;
+            width: 180px;
         }
         
         button {
@@ -48,37 +48,24 @@
             color: white;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: #2980b9;
         }
         
         button.delete {
             background-color: #e74c3c;
         }
         
-        button.delete:hover {
-            background-color: #c0392b;
-        }
-        
         button.admin {
             background-color: #9b59b6;
-        }
-        
-        button.admin:hover {
-            background-color: #8e44ad;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 10px;
         }
         
         th, td {
-            padding: 12px 15px;
+            padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
@@ -88,13 +75,9 @@
             color: white;
         }
         
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        
         .result-section {
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 15px;
+            padding: 10px;
             border-radius: 4px;
         }
         
@@ -132,17 +115,13 @@
             border-radius: 4px;
         }
         
-        .nav-link:hover {
-            background-color: #219653;
-        }
-        
         .login-form {
             max-width: 400px;
             margin: 50px auto;
-            padding: 30px;
+            padding: 20px;
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            box-shadow: 0 0 5px gray;
             text-align: center;
         }
         
@@ -156,24 +135,23 @@
         
         .user-info {
             background-color: #e8f4f8;
-            padding: 10px;
+            padding: 8px;
             border-radius: 4px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .setup-panel {
             max-width: 500px;
             margin: 50px auto;
-            padding: 30px;
+            padding: 20px;
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            box-shadow: 0 0 5px gray;
             text-align: center;
         }
     </style>
 </head>
 <body>
-    <!-- Панель первоначальной настройки -->
     <div id="setupPanel" class="setup-panel">
         <h2>Первоначальная настройка системы</h2>
         <p>Для начала работы необходимо создать первого администратора системы</p>
@@ -188,7 +166,6 @@
         </div>
     </div>
 
-    <!-- Форма авторизации -->
     <div id="loginForm" class="login-form hidden">
         <h2>Авторизация для учителей</h2>
         <p>Введите логин и пароль для доступа к панели управления</p>
@@ -201,14 +178,11 @@
         </div>
     </div>
 
-    <!-- Панель управления (показывается после авторизации) -->
     <div id="teacherPanel" class="teacher-panel">
         <h1>Система управления балансами школьной столовой</h1>
         <h2 style="text-align: center;">Версия для учителей</h2>
         
-        <div class="user-info" id="userInfo">
-            <!-- Информация о текущем пользователе -->
-        </div>
+        <div class="user-info" id="userInfo"></div>
         
         <div style="text-align: center; margin-bottom: 20px;">
             <a href="student.html" class="nav-link">Перейти к версии для учеников</a>
@@ -217,7 +191,6 @@
             <button id="logoutButton" style="background-color: #e74c3c;">Выйти</button>
         </div>
         
-        <!-- Раздел для создания нового ученика -->
         <div class="section">
             <h2>Создать нового ученика</h2>
             <input type="text" id="newStudentName" placeholder="ФИО ученика">
@@ -227,7 +200,6 @@
             <div id="createResult" class="result-section"></div>
         </div>
         
-        <!-- Раздел для пополнения баланса -->
         <div class="section">
             <h2>Пополнить баланс</h2>
             <input type="text" id="studentIdTopup" placeholder="Число">
@@ -236,7 +208,6 @@
             <div id="topupResult" class="result-section"></div>
         </div>
         
-        <!-- Раздел для списания средств -->
         <div class="section">
             <h2>Списать средства</h2>
             <input type="text" id="studentIdDeduct" placeholder="Число">
@@ -245,7 +216,6 @@
             <div id="deductResult" class="result-section"></div>
         </div>
 
-        <!-- Раздел для массового списания -->
         <div class="section">
             <h2>Списать у всех</h2>
             <p>Списать одинаковую сумму у всех учеников</p>
@@ -254,7 +224,6 @@
             <div id="massDeductResult" class="result-section"></div>            
         </div>
         
-        <!-- Раздел для удаления ученика -->
         <div class="section">
             <h2>Удалить ученика</h2>
             <input type="text" id="studentIdDelete" placeholder="Число">
@@ -262,14 +231,12 @@
             <div id="deleteResult" class="result-section"></div>
         </div>
         
-        <!-- Раздел для просмотра всех учеников -->
         <div class="section">
             <h2>Все ученики</h2>
             <button id="showAllStudents">Показать всех учеников</button>
             <div id="allStudents" class="result-section"></div>
         </div>
         
-        <!-- Модальное окно для смены пароля -->
         <div id="changePasswordModal" class="section hidden">
             <h2>Смена пароля</h2>
             <input type="password" id="currentPassword" placeholder="Текущий пароль">
@@ -280,7 +247,6 @@
             <div id="passwordResult" class="result-section"></div>
         </div>
         
-        <!-- Модальное окно для управления пользователями -->
         <div id="manageUsersModal" class="section hidden">
             <h2>Управление пользователями</h2>
             
@@ -307,11 +273,9 @@
     </div>
 
     <script type="module">
-        // Импорт Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getDatabase, ref, set, get, update, remove } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-        // Конфигурация Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyA5KkkUREC2ypWXWEuWrb_TBqAwGndPLz4",
             authDomain: "schoolbalance-bd77c.firebaseapp.com",
@@ -323,22 +287,18 @@
             measurementId: "G-MHGHWSYXP2"
         };
 
-        // Инициализация Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Глобальные переменные
         let lastStudentId = 0;
         let isTeacherLoggedIn = false;
         let currentUser = null;
         let systemInitialized = false;
 
-        // Проверка авторизации при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             checkSystemStatus();
         });
 
-        // Обработчики событий
         document.getElementById('setupAdmin').addEventListener('click', setupFirstAdmin);
         document.getElementById('loginButton').addEventListener('click', teacherLogin);
         document.getElementById('logoutButton').addEventListener('click', teacherLogout);
@@ -355,18 +315,15 @@
         document.getElementById('refreshUsers').addEventListener('click', showUsersList);
         document.getElementById('cancelManageUsers').addEventListener('click', hideManageUsersModal);
 
-        // Функция проверки статуса системы
         async function checkSystemStatus() {
             try {
                 const usersRef = ref(database, 'users');
                 const snapshot = await get(usersRef);
                 
                 if (snapshot.exists() && Object.keys(snapshot.val()).length > 0) {
-                    // Пользователи существуют, проверяем авторизацию
                     systemInitialized = true;
                     checkAuthStatus();
                 } else {
-                    // Пользователей нет, показываем панель настройки
                     systemInitialized = false;
                     showSetupPanel();
                 }
@@ -376,7 +333,6 @@
             }
         }
 
-        // Функция создания первого администратора
         async function setupFirstAdmin() {
             const login = document.getElementById('setupLogin').value.trim();
             const password = document.getElementById('setupPassword').value;
@@ -402,25 +358,21 @@
                 const usersRef = ref(database, 'users');
                 const snapshot = await get(usersRef);
                 
-                // Проверяем, что пользователей действительно нет
                 if (snapshot.exists() && Object.keys(snapshot.val()).length > 0) {
                     resultDiv.innerHTML = '<div class="error">Система уже инициализирована. Используйте форму авторизации.</div>';
                     return;
                 }
 
-                // Создаем первого администратора
                 await set(ref(database, 'users/' + login), {
                     password: password,
                     role: 'admin',
                     name: 'Администратор'
                 });
 
-                // Создаем запись lastStudentId если её нет
                 await set(ref(database, 'lastStudentId'), 1000);
 
                 resultDiv.innerHTML = '<div class="success">Администратор успешно создан! Теперь вы можете войти в систему.</div>';
                 
-                // Переключаем на форму авторизации через 2 секунды
                 setTimeout(() => {
                     systemInitialized = true;
                     showLoginForm();
@@ -432,7 +384,6 @@
             }
         }
 
-        // Функция проверки статуса авторизации
         async function checkAuthStatus() {
             if (!systemInitialized) {
                 showSetupPanel();
@@ -445,7 +396,6 @@
                 if (savedUser) {
                     try {
                         currentUser = JSON.parse(savedUser);
-                        // Проверяем, что пользователь всё ещё существует в базе
                         const userRef = ref(database, 'users/' + currentUser.login);
                         const snapshot = await get(userRef);
                         
@@ -454,7 +404,6 @@
                             showTeacherPanel();
                             updateUserInfo();
                         } else {
-                            // Пользователь удален из базы
                             localStorage.removeItem('teacherAuth');
                             localStorage.removeItem('currentUser');
                             showLoginForm();
@@ -473,14 +422,12 @@
             await loadLastStudentId();
         }
 
-        // Показать панель настройки
         function showSetupPanel() {
             document.getElementById('setupPanel').style.display = 'block';
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('teacherPanel').style.display = 'none';
         }
 
-        // Показать форму авторизации
         function showLoginForm() {
             if (!systemInitialized) {
                 showSetupPanel();
@@ -491,7 +438,6 @@
             document.getElementById('teacherPanel').style.display = 'none';
         }
 
-        // Показать панель управления
         function showTeacherPanel() {
             if (!systemInitialized) {
                 showSetupPanel();
@@ -504,7 +450,6 @@
             hideManageUsersModal();
         }
 
-        // Обновление информации о пользователе
         function updateUserInfo() {
             const userInfoDiv = document.getElementById('userInfo');
             if (currentUser) {
@@ -513,7 +458,6 @@
                     <strong>Роль:</strong> ${currentUser.role === 'admin' ? 'Администратор' : 'Учитель'}
                 `;
                 
-                // Показываем кнопки управления только для администраторов
                 if (currentUser.role === 'admin') {
                     document.getElementById('manageUsersBtn').style.display = 'inline-block';
                 } else {
@@ -522,7 +466,6 @@
             }
         }
 
-        // Функция авторизации учителя
         async function teacherLogin() {
             if (!systemInitialized) {
                 alert('Система не инициализирована. Сначала создайте администратора.');
@@ -570,19 +513,16 @@
             }
         }
 
-        // Функция выхода
         function teacherLogout() {
             isTeacherLoggedIn = false;
             currentUser = null;
             localStorage.removeItem('teacherAuth');
             localStorage.removeItem('currentUser');
             showLoginForm();
-            // Очищаем поля формы
             document.getElementById('teacherLogin').value = '';
             document.getElementById('teacherPassword').value = '';
         }
 
-        // Показать модальное окно смены пароля
         function showChangePasswordModal() {
             document.getElementById('changePasswordModal').style.display = 'block';
             document.getElementById('currentPassword').value = '';
@@ -591,12 +531,10 @@
             document.getElementById('passwordResult').innerHTML = '';
         }
 
-        // Скрыть модальное окно смены пароля
         function hideChangePasswordModal() {
             document.getElementById('changePasswordModal').style.display = 'none';
         }
 
-        // Показать модальное окно управления пользователями
         function showManageUsersModal() {
             if (currentUser && currentUser.role === 'admin') {
                 document.getElementById('manageUsersModal').style.display = 'block';
@@ -606,12 +544,10 @@
             }
         }
 
-        // Скрыть модальное окно управления пользователями
         function hideManageUsersModal() {
             document.getElementById('manageUsersModal').style.display = 'none';
         }
 
-        // Функция смены пароля
         async function changePassword() {
             const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value;
@@ -634,21 +570,18 @@
             }
 
             try {
-                // Проверяем текущий пароль
                 const userRef = ref(database, 'users/' + currentUser.login);
                 const snapshot = await get(userRef);
                 
                 if (snapshot.exists()) {
                     const userData = snapshot.val();
                     if (userData.password === currentPassword) {
-                        // Обновляем пароль
                         await update(userRef, {
                             password: newPassword
                         });
                         
                         resultDiv.innerHTML = '<div class="success">Пароль успешно изменен</div>';
                         
-                        // Очищаем поля
                         document.getElementById('currentPassword').value = '';
                         document.getElementById('newPassword').value = '';
                         document.getElementById('confirmPassword').value = '';
@@ -662,7 +595,6 @@
             }
         }
 
-        // Функция добавления нового пользователя
         async function addNewUser() {
             if (currentUser.role !== 'admin') {
                 alert('Доступ запрещен. Только администраторы могут добавлять пользователей.');
@@ -699,11 +631,9 @@
                     
                     resultDiv.innerHTML = '<div class="success">Пользователь успешно добавлен</div>';
                     
-                    // Очищаем поля
                     document.getElementById('newUserName').value = '';
                     document.getElementById('newUserPassword').value = '';
                     
-                    // Обновляем список пользователей
                     showUsersList();
                 }
             } catch (error) {
@@ -712,7 +642,6 @@
             }
         }
 
-        // Функция отображения списка пользователей
         async function showUsersList() {
             if (currentUser.role !== 'admin') return;
 
@@ -729,7 +658,6 @@
                     
                     for (const login in users) {
                         const user = users[login];
-                        // Не показываем текущего пользователя в списке для удаления
                         const deleteButton = login !== currentUser.login 
                             ? `<button class="delete" onclick="deleteUser('${login}')">Удалить</button>`
                             : '<em>Текущий пользователь</em>';
@@ -755,7 +683,6 @@
             }
         }
 
-        // Глобальная функция для удаления пользователя
         window.deleteUser = async function(login) {
             if (currentUser.role !== 'admin') {
                 alert('Доступ запрещен. Только администраторы могут удалять пользователей.');
@@ -775,14 +702,13 @@
             }
         };
 
-        // Загрузка последнего ID ученика при запуске
         async function loadLastStudentId() {
             try {
                 const snapshot = await get(ref(database, 'lastStudentId'));
                 if (snapshot.exists()) {
                     lastStudentId = snapshot.val();
                 } else {
-                    lastStudentId = 1000; // Начальный ID
+                    lastStudentId = 1000;
                     await set(ref(database, 'lastStudentId'), lastStudentId);
                 }
             } catch (error) {
@@ -790,7 +716,6 @@
             }
         }
 
-        // Функция создания нового ученика
         async function createStudent() {
             if (!isTeacherLoggedIn) {
                 alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
@@ -808,23 +733,19 @@
             }
 
             try {
-                // Генерируем новый ID ученика
                 lastStudentId++;
                 const studentId = lastStudentId.toString();
                 
-                // Сохраняем нового ученика в базу данных
                 await set(ref(database, 'students/' + studentId), {
                     name: name,
                     class: studentClass,
                     balance: balance || 0
                 });
                 
-                // Обновляем последний ID в базе
                 await set(ref(database, 'lastStudentId'), lastStudentId);
                 
                 resultDiv.innerHTML = `<div class="success">Ученик успешно создан! Число: <strong>${studentId}</strong></div>`;
                 
-                // Очищаем поля
                 document.getElementById('newStudentName').value = '';
                 document.getElementById('newStudentClass').value = '';
                 document.getElementById('initialBalance').value = '0';
@@ -835,7 +756,6 @@
             }
         }
 
-        // Функция пополнения баланса
         async function topupBalance() {
             if (!isTeacherLoggedIn) {
                 alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
@@ -865,7 +785,6 @@
                     
                     resultDiv.innerHTML = `<div class="success">Баланс успешно пополнен на ${amount} руб. Новый баланс: ${newBalance} руб.</div>`;
                     
-                    // Очищаем поля
                     document.getElementById('studentIdTopup').value = '';
                     document.getElementById('topupAmount').value = '';
                 } else {
@@ -877,56 +796,51 @@
             }
         }
 
-        // Функция списания средств
-        // Функция списания средств
-async function deductBalance() {
-    if (!isTeacherLoggedIn) {
-        alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
-        return;
-    }
-
-    const studentId = document.getElementById('studentIdDeduct').value.trim();
-    const amount = parseFloat(document.getElementById('deductAmount').value);
-    const resultDiv = document.getElementById('deductResult');
-    
-    if (!studentId || isNaN(amount) || amount <= 0) {
-        resultDiv.innerHTML = '<div class="error">Пожалуйста, введите корректные данные</div>';
-        return;
-    }
-
-    try {
-        const studentRef = ref(database, 'students/' + studentId);
-        const snapshot = await get(studentRef);
-        
-        if (snapshot.exists()) {
-            const currentBalance = snapshot.val().balance || 0;
-            const newBalance = currentBalance - amount;
-            
-            // Добавляем предупреждение при отрицательном балансе
-            let message = `<div class="success">Списано ${amount} руб. Новый баланс: ${newBalance} руб.</div>`;
-            if (newBalance < 0) {
-                message = `<div class="warning">Списано ${amount} руб. Внимание: отрицательный баланс: ${newBalance} руб.</div>`;
+        async function deductBalance() {
+            if (!isTeacherLoggedIn) {
+                alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
+                return;
             }
-            
-            await update(studentRef, {
-                balance: newBalance
-            });
-            
-            resultDiv.innerHTML = message;
-            
-            // Очищаем поля
-            document.getElementById('studentIdDeduct').value = '';
-            document.getElementById('deductAmount').value = '';
-        } else {
-            resultDiv.innerHTML = '<div class="error">Ученик с таким номером не найден</div>';
-        }
-    } catch (error) {
-        console.error('Ошибка при списании средств:', error);
-        resultDiv.innerHTML = '<div class="error">Произошла ошибка при списании средств</div>';
-    }
-}
 
-        // Функция удаления ученика
+            const studentId = document.getElementById('studentIdDeduct').value.trim();
+            const amount = parseFloat(document.getElementById('deductAmount').value);
+            const resultDiv = document.getElementById('deductResult');
+            
+            if (!studentId || isNaN(amount) || amount <= 0) {
+                resultDiv.innerHTML = '<div class="error">Пожалуйста, введите корректные данные</div>';
+                return;
+            }
+
+            try {
+                const studentRef = ref(database, 'students/' + studentId);
+                const snapshot = await get(studentRef);
+                
+                if (snapshot.exists()) {
+                    const currentBalance = snapshot.val().balance || 0;
+                    const newBalance = currentBalance - amount;
+                    
+                    let message = `<div class="success">Списано ${amount} руб. Новый баланс: ${newBalance} руб.</div>`;
+                    if (newBalance < 0) {
+                        message = `<div class="warning">Списано ${amount} руб. Внимание: отрицательный баланс: ${newBalance} руб.</div>`;
+                    }
+                    
+                    await update(studentRef, {
+                        balance: newBalance
+                    });
+                    
+                    resultDiv.innerHTML = message;
+                    
+                    document.getElementById('studentIdDeduct').value = '';
+                    document.getElementById('deductAmount').value = '';
+                } else {
+                    resultDiv.innerHTML = '<div class="error">Ученик с таким номером не найден</div>';
+                }
+            } catch (error) {
+                console.error('Ошибка при списании средств:', error);
+                resultDiv.innerHTML = '<div class="error">Произошла ошибка при списании средств</div>';
+            }
+        }
+
         async function deleteStudent() {
             if (!isTeacherLoggedIn) {
                 alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
@@ -946,7 +860,6 @@ async function deductBalance() {
                 const snapshot = await get(studentRef);
                 
                 if (snapshot.exists()) {
-                    // Подтверждение удаления
                     if (confirm(`Вы уверены, что хотите удалить ученика с ID ${studentId}?`)) {
                         await remove(studentRef);
                         resultDiv.innerHTML = `<div class="success">Ученик с ID ${studentId} успешно удален</div>`;
@@ -963,7 +876,6 @@ async function deductBalance() {
             }
         }
 
-        // Функция показа всех учеников
         async function showAllStudents() {
             if (!isTeacherLoggedIn) {
                 alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
@@ -1006,7 +918,6 @@ async function deductBalance() {
             }
         }
 
-        // Глобальная функция для удаления ученика по ID (вызывается из таблицы)
         window.deleteStudentById = async function(studentId) {
             if (!isTeacherLoggedIn) {
                 alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
@@ -1018,7 +929,6 @@ async function deductBalance() {
                     const studentRef = ref(database, 'students/' + studentId);
                     await remove(studentRef);
                     alert(`Ученик с ID ${studentId} успешно удален`);
-                    // Обновляем таблицу
                     showAllStudents();
                 } catch (error) {
                     console.error('Ошибка при удалении ученика:', error);
@@ -1026,77 +936,73 @@ async function deductBalance() {
                 }
             }
         }
-                        // Добавить в обработчики событий
-            document.getElementById('massDeductBalance').addEventListener('click', massDeductBalance);
+        
+        document.getElementById('massDeductBalance').addEventListener('click', massDeductBalance);
             
-            // Функция массового списания
-            async function massDeductBalance() {
-                if (!isTeacherLoggedIn) {
-                    alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
-                    return;
-                }
+        async function massDeductBalance() {
+            if (!isTeacherLoggedIn) {
+                alert('Доступ запрещен. Пожалуйста, авторизуйтесь.');
+                return;
+            }
+        
+            const amount = parseFloat(document.getElementById('massDeductAmount').value);
+            const resultDiv = document.getElementById('massDeductResult');
             
-                const amount = parseFloat(document.getElementById('massDeductAmount').value);
-                const resultDiv = document.getElementById('massDeductResult');
+            if (isNaN(amount) || amount <= 0) {
+                resultDiv.innerHTML = '<div class="error">Пожалуйста, введите корректную сумму</div>';
+                return;
+            }
+        
+            if (!confirm(`Вы уверены, что хотите списать ${amount} руб. у ВСЕХ учеников?`)) {
+                resultDiv.innerHTML = '<div class="info">Операция отменена</div>';
+                return;
+            }
+        
+            try {
+                const studentsRef = ref(database, 'students');
+                const snapshot = await get(studentsRef);
                 
-                if (isNaN(amount) || amount <= 0) {
-                    resultDiv.innerHTML = '<div class="error">Пожалуйста, введите корректную сумму</div>';
-                    return;
-                }
-            
-                if (!confirm(`Вы уверены, что хотите списать ${amount} руб. у ВСЕХ учеников?`)) {
-                    resultDiv.innerHTML = '<div class="info">Операция отменена</div>';
-                    return;
-                }
-            
-                try {
-                    const studentsRef = ref(database, 'students');
-                    const snapshot = await get(studentsRef);
+                if (snapshot.exists()) {
+                    const students = snapshot.val();
+                    let updatedCount = 0;
+                    let negativeBalanceCount = 0;
                     
-                    if (snapshot.exists()) {
-                        const students = snapshot.val();
-                        let updatedCount = 0;
-                        let negativeBalanceCount = 0;
+                    for (const studentId in students) {
+                        const student = students[studentId];
+                        const currentBalance = student.balance || 0;
+                        const newBalance = currentBalance - amount;
                         
-                        // Обновляем баланс каждого ученика
-                        for (const studentId in students) {
-                            const student = students[studentId];
-                            const currentBalance = student.balance || 0;
-                            const newBalance = currentBalance - amount;
-                            
-                            await update(ref(database, 'students/' + studentId), {
-                                balance: newBalance
-                            });
-                            
-                            updatedCount++;
-                            if (newBalance < 0) {
-                                negativeBalanceCount++;
-                            }
+                        await update(ref(database, 'students/' + studentId), {
+                            balance: newBalance
+                        });
+                        
+                        updatedCount++;
+                        if (newBalance < 0) {
+                            negativeBalanceCount++;
                         }
-                        
-                        let message = `<div class="success">Успешно списано ${amount} руб. у ${updatedCount} учеников</div>`;
-                        if (negativeBalanceCount > 0) {
-                            message += `<div class="warning">Внимание: у ${negativeBalanceCount} учеников отрицательный баланс</div>`;
-                        }
-                        
-                        resultDiv.innerHTML = message;
-                        
-                        // Очищаем поле
-                        document.getElementById('massDeductAmount').value = '';
-                        
-                        // Обновляем таблицу учеников если она открыта
-                        if (document.getElementById('allStudents').innerHTML.includes('table')) {
-                            showAllStudents();
-                        }
-                        
-                    } else {
-                        resultDiv.innerHTML = '<div class="info">В системе нет учеников</div>';
                     }
-                } catch (error) {
-                    console.error('Ошибка при массовом списании:', error);
-                    resultDiv.innerHTML = '<div class="error">Произошла ошибка при массовом списании</div>';
+                    
+                    let message = `<div class="success">Успешно списано ${amount} руб. у ${updatedCount} учеников</div>`;
+                    if (negativeBalanceCount > 0) {
+                        message += `<div class="warning">Внимание: у ${negativeBalanceCount} учеников отрицательный баланс</div>`;
+                    }
+                    
+                    resultDiv.innerHTML = message;
+                    
+                    document.getElementById('massDeductAmount').value = '';
+                    
+                    if (document.getElementById('allStudents').innerHTML.includes('table')) {
+                        showAllStudents();
+                    }
+                    
+                } else {
+                    resultDiv.innerHTML = '<div class="info">В системе нет учеников</div>';
                 }
-            };
+            } catch (error) {
+                console.error('Ошибка при массовом списании:', error);
+                resultDiv.innerHTML = '<div class="error">Произошла ошибка при массовом списании</div>';
+            }
+        };
     </script>
 </body>
 </html>
