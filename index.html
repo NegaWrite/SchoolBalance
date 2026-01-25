@@ -32,7 +32,7 @@
             margin-top: 20px;
         }
         
-        input, button {
+        input, textarea, button {
             padding: 10px;
             margin: 10px 5px;
             border-radius: 4px;
@@ -44,11 +44,23 @@
             width: 250px;
         }
         
+        textarea {
+            width: 100%;
+            max-width: 100%;
+            min-height: 60px;
+            font-family: Arial;
+        }
+        
         button {
             background-color: #27ae60;
             color: white;
             border: none;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #219653;
         }
         
         .result-section {
@@ -81,6 +93,58 @@
             margin: 10px 0;
         }
         
+        .chat-section {
+            margin-top: 30px;
+        }
+        
+        .chat-container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px gray;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .chat-message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .message-author {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .message-text {
+            color: #333;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+            margin-top: 5px;
+        }
+        
+        .chat-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
         .nav-link {
             display: inline-block;
             margin: 10px;
@@ -103,6 +167,14 @@
             text-align: center;
             color: #666;
         }
+        
+        .section-title {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #27ae60;
+            color: #27ae60;
+        }
     </style>
 </head>
 <body>
@@ -122,12 +194,48 @@
         </div>
     </div>
 
+    <div class="chat-section">
+        <h2 class="section-title">Чат</h2>
+        <div class="instructions">
+            <p>Чтобы отправить сообщение в чат, введите ваше число и текст сообщения. В чате отображается только имя отправителя и сообщение.</p>
+        </div>
+        
+        <div class="chat-container" id="chatMessages">
+            <!-- Сообщения чата будут загружаться здесь -->
+            <div id="loadingMessages">Загрузка сообщений...</div>
+        </div>
+        
+        <div class="chat-form container">
+            <h3>Отправить сообщение</h3>
+            <div class="form-group">
+                <label for="studentIdChat">Ваше число:</label>
+                <input type="text" id="studentIdChat" placeholder="Введите ваше число">
+            </div>
+            
+            <div class="form-group">
+                <label for="messageText">Сообщение:</label>
+                <textarea id="messageText" placeholder="Введите ваше сообщение"></textarea>
+            </div>
+            
+            <button id="sendMessage">Отправить сообщение</button>
+            <div id="chatResult" class="result-section"></div>
+        </div>
+    </div>
+
     <h4>school.balance1356@gmail.com</h4>
     <h4>© 2026 Скул баланс</h4>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+        import { 
+            getDatabase, 
+            ref, 
+            get, 
+            push, 
+            set, 
+            onChildAdded,
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA5KkkUREC2ypWXWEuWrb_TBqAwGndPLz4",
@@ -143,6 +251,7 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
+        // Функция проверки баланса
         document.getElementById('checkBalance').addEventListener('click', checkBalance);
 
         async function checkBalance() {
@@ -179,6 +288,107 @@
                 resultDiv.innerHTML = '<div class="error">Произошла ошибка при проверке баланса.</div>';
             }
         }
+
+        // Функции для работы с чатом
+        document.getElementById('sendMessage').addEventListener('click', sendMessage);
+        
+        // Загрузка и отображение сообщений чата
+        function loadChatMessages() {
+            const chatRef = ref(database, 'chat');
+            const chatContainer = document.getElementById('chatMessages');
+            
+            onChildAdded(chatRef, (snapshot) => {
+                const message = snapshot.val();
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'chat-message';
+                
+                // Форматируем время
+                let timeString = 'только что';
+                if (message.timestamp) {
+                    const date = new Date(message.timestamp);
+                    timeString = date.toLocaleString('ru-RU', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+                
+                messageDiv.innerHTML = `
+                    <div class="message-author">${message.authorName}</div>
+                    <div class="message-text">${message.text}</div>
+                    <div class="message-time">${timeString}</div>
+                `;
+                
+                // Удаляем сообщение о загрузке при первом сообщении
+                const loadingMsg = document.getElementById('loadingMessages');
+                if (loadingMsg && chatContainer.contains(loadingMsg)) {
+                    chatContainer.removeChild(loadingMsg);
+                }
+                
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
+        }
+        
+        // Отправка сообщения
+        async function sendMessage() {
+            const studentId = document.getElementById('studentIdChat').value.trim();
+            const messageText = document.getElementById('messageText').value.trim();
+            const resultDiv = document.getElementById('chatResult');
+            
+            if (!studentId) {
+                resultDiv.innerHTML = '<div class="error">Пожалуйста, введите ваше число</div>';
+                return;
+            }
+            
+            if (!messageText) {
+                resultDiv.innerHTML = '<div class="error">Пожалуйста, введите сообщение</div>';
+                return;
+            }
+            
+            try {
+                // Проверяем, существует ли студент с таким числом
+                const studentRef = ref(database, 'students/' + studentId);
+                const snapshot = await get(studentRef);
+                
+                if (!snapshot.exists()) {
+                    resultDiv.innerHTML = '<div class="error">Ученик с таким числом не найден. Вы не можете отправить сообщение.</div>';
+                    return;
+                }
+                
+                const studentData = snapshot.val();
+                const authorName = studentData.name || 'Аноним';
+                
+                // Создаем новое сообщение в чате
+                const chatRef = ref(database, 'chat');
+                const newMessageRef = push(chatRef);
+                
+                await set(newMessageRef, {
+                    authorId: studentId,
+                    authorName: authorName,
+                    text: messageText,
+                    timestamp: serverTimestamp()
+                });
+                
+                // Очищаем форму и показываем успешное сообщение
+                document.getElementById('messageText').value = '';
+                resultDiv.innerHTML = '<div class="success">Сообщение отправлено!</div>';
+                
+                // Через 3 секунды очищаем сообщение об успехе
+                setTimeout(() => {
+                    resultDiv.innerHTML = '';
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Ошибка при отправке сообщения:', error);
+                resultDiv.innerHTML = '<div class="error">Произошла ошибка при отправке сообщения.</div>';
+            }
+        }
+        
+        // Загружаем сообщения чата при загрузке страницы
+        loadChatMessages();
     </script>
 </body>
 </html>
